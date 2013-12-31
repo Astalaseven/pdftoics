@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import arrow
+from ics import Calendar, Event
 from os import chdir, listdir
 from pdftoics import xml_to_blocks, blocks_to_matrix_dict
 from scraperwiki import pdftoxml
@@ -45,14 +47,53 @@ def ics_dates(xml):
     return begin, end
 
 
-def matrix_to_ics():
-    hours = ["8h15", "9h15", "10h15", "10h30", "11h30", "13h45", "14h45", "15h45", "16h", "17h", "18h"]
+def matrix_to_ics(matrix_dict, begin, end):
+
+    c = Calendar()
+    hours = ["08:15", "09:15", "10:15", "10:30", "11:30", \
+        "13:45", "14:45", "15:45", "16:00", "17:00", "18:00"]
+    begin = arrow.get("{} {}".format(begin, hours[0]), 'DD-MM-YYYY HH:mm')
+
+    # for each group
     for key in matrix_dict.keys():
-        for day in matrix_dict[key]:
-            for course in day:
-                if course:
-                    abb, prof, local = course.split()
-                    print(abb, prof, local)
+        # for each day
+        for i, day in enumerate(matrix_dict[key]):
+            # for each course
+            for j, course in enumerate(day):
+
+                e = Event()
+
+                if course != None:
+
+                    #print(course)
+                    #abb, prof, local = course.split()
+                    abb = course
+                    #print(abb, prof, local)
+
+                    e.name = abb
+
+                    # set begin hour
+                    hour = int(hours[j].split(':')[0])
+                    minute = int(hours[j].split(':')[1])
+                    #print(hour, minute)
+                    e.begin = begin.replace(hour=hour, minute=minute)
+
+                    # set end hour
+                    e.end = e.begin.replace(hours=+1)
+
+                    c.events.append(e)
+
+            # new day
+            begin = begin.replace(days=+1)
+
+            # new week
+            if i % 7 == 0:
+                begin = begin.replace(weeks=+1)
+
+
+    with open('my.ics', 'w') as f:
+        f.writelines(c)
+        #print(c)
 
 
 if __name__ == '__main__':
@@ -66,11 +107,12 @@ if __name__ == '__main__':
         pdf_scrape(pdf)
 
         with open(pdf + ".xml") as r:
-            print("\nOuverture du fichier XML " + pdf + ".xml\n")
+
             xml = r.readlines()
 
         blocks = xml_to_blocks(xml)
         matrix_dict = blocks_to_matrix_dict(blocks)
         begin_date, end_date = ics_dates(xml)
-        print(begin_date, end_date)
-        print(matrix_dict.keys())
+        #print(begin_date, end_date)
+        #print(matrix_dict.keys())
+        matrix_to_ics(matrix_dict, begin_date, end_date)
