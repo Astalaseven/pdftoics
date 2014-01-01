@@ -37,6 +37,7 @@ def xml_to_blocks(xml):
     blocks = []
 
     for line in xml:
+
         if "text" in line:
             soup1 = BeautifulSoup(line)
             c = Course()
@@ -82,11 +83,13 @@ def blocks_to_matrix(blocks):
         closest_hour = None
 
         for i, time in enumerate(times):
+
             if abs(time.v_center - course.v_center) < distance:
                 distance = abs(time.v_center - course.v_center)
                 closest_hour = i
 
         matrix[closest_day][closest_hour] = course.content
+
     return name, matrix
 
 
@@ -102,6 +105,7 @@ def blocks_to_matrix_dict(blocks):
     start, tables = 0, {}
 
     for i, block in enumerate(blocks):
+
         if block.font == 3:
             name, matrix = blocks_to_matrix(blocks[start:i + 1])
             tables[name] = matrix
@@ -111,13 +115,19 @@ def blocks_to_matrix_dict(blocks):
 
 
 def pp_group(matrix_dict, group):
+
     if not group in matrix_dict:
         raise ValueError('Not in matrix_dict, sorry')
+
     matrix = matrix_dict[group]
     d = {0: 'Lundi', 1: 'Mardi', 2: 'Mercredi', 3: 'Jeudi', 4: 'Vendredi'}
+
     for day, col in enumerate(matrix):
+
         print '=== {} ==='.format(d[day])
+
         for course in col:
+            
             if course:
                 print course
             else:

@@ -11,9 +11,8 @@ def list_pdf():
     '''Lists all pdfs in subdirectory'''
 
     pdfs = []
-    chdir("pdf/")
 
-    for files in listdir("."):
+    for files in listdir("pdf/."):
         if files.endswith(".pdf"):
             pdfs.append(files)
 
@@ -23,10 +22,10 @@ def list_pdf():
 def pdf_scrape(file):
     '''Convert pdf to xml'''
 
-    with open(file) as u:
+    with open("pdf/" + file) as u:
         xml = pdftoxml(u.read())
 
-    with open(pdf + ".xml", "w") as w:
+    with open("xml/" + pdf + ".xml", "w") as w:
         w.write(xml)
 
     return xml
@@ -47,53 +46,47 @@ def ics_dates(xml):
     return begin, end
 
 
-def matrix_to_ics(matrix_dict, begin, end):
+def matrix_to_ics(matrix_dict, group, begin, end):
 
     c = Calendar()
-    hours = ["08:15", "09:15", "10:15", "10:30", "11:30", \
-        "13:45", "14:45", "15:45", "16:00", "17:00", "18:00"]
+
+    hours = ["08:15", "09:15", "10:30", "11:30", "12:30", "13:45", "14:45", "16:00", "17:00"]
+
+    d = {0: 'Lundi', 1: 'Mardi', 2: 'Mercredi', 3: 'Jeudi', 4: 'Vendredi'}
+
     begin = arrow.get("{} {}".format(begin, hours[0]), 'DD-MM-YYYY HH:mm')
 
-    # for each group
-    for key in matrix_dict.keys():
-        # for each day
-        for i, day in enumerate(matrix_dict[key]):
-            # for each course
-            for j, course in enumerate(day):
 
-                e = Event()
+    # for each day
+    for i, day in enumerate(matrix_dict[group]):
+        # for each course
+        for j, course in enumerate(day):
 
-                if course != None:
+            print(d[i], hours[j], course)
 
-                    #print(course)
-                    #abb, prof, local = course.split()
-                    abb = course
-                    #print(abb, prof, local)
+            e = Event()
 
-                    e.name = abb
+            if course:
 
-                    # set begin hour
-                    hour = int(hours[j].split(':')[0])
-                    minute = int(hours[j].split(':')[1])
-                    #print(hour, minute)
-                    e.begin = begin.replace(hour=hour, minute=minute)
+                e.name = course
 
-                    # set end hour
-                    e.end = e.begin.replace(hours=+1)
+                # get begin hour
+                hour = int(hours[j].split(':')[0])
+                minute = int(hours[j].split(':')[1])
 
-                    c.events.append(e)
+                # set event begin/end date
+                e.begin = begin.replace(hour=hour, minute=minute)
+                e.end = e.begin.replace(hours=+1)
 
-            # new day
-            begin = begin.replace(days=+1)
+                c.events.append(e)
 
-            # new week
-            if i % 7 == 0:
-                begin = begin.replace(weeks=+1)
+                print(e)
 
+        # new day
+        begin = begin.replace(days=+1)
 
-    with open('my.ics', 'w') as f:
+    with open("ics/" + group + ".ics", "w") as f:
         f.writelines(c)
-        #print(c)
 
 
 if __name__ == '__main__':
@@ -106,7 +99,7 @@ if __name__ == '__main__':
 
         pdf_scrape(pdf)
 
-        with open(pdf + ".xml") as r:
+        with open("xml/" + pdf + ".xml") as r:
 
             xml = r.readlines()
 
@@ -115,4 +108,9 @@ if __name__ == '__main__':
         begin_date, end_date = ics_dates(xml)
         #print(begin_date, end_date)
         #print(matrix_dict.keys())
-        matrix_to_ics(matrix_dict, begin_date, end_date)
+        # for each group
+        # for key in matrix_dict.keys():
+        group = matrix_dict.keys()[0]
+        print(group)
+        matrix_to_ics(matrix_dict, group, begin_date, end_date)
+        print("\n\n\n")
