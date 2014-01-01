@@ -51,8 +51,10 @@ def save_pdf(url, pdf, session):
 if __name__ == '__main__':
 
     if user == "esi_id" or password == "esi_pass":
+
         print("Please enter your credentials. Quitting.")
         exit()
+
 
     authenticate(user, password, s)
     soup, timetable = get_timetable(s)

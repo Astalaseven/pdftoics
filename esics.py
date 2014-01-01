@@ -3,7 +3,7 @@
 
 import arrow
 from ics import Calendar, Event
-from os import chdir, listdir
+from os import listdir
 from pdftoics import xml_to_blocks, blocks_to_matrix_dict
 from scraperwiki import pdftoxml
 
@@ -50,6 +50,8 @@ def matrix_to_ics(matrix_dict, group, begin, end):
 
     c = Calendar()
 
+    #print(c.events)
+
     hours = ["08:15", "09:15", "10:30", "11:30", "12:30", "13:45", "14:45", "16:00", "17:00"]
 
     d = {0: 'Lundi', 1: 'Mardi', 2: 'Mercredi', 3: 'Jeudi', 4: 'Vendredi'}
@@ -61,8 +63,6 @@ def matrix_to_ics(matrix_dict, group, begin, end):
     for i, day in enumerate(matrix_dict[group]):
         # for each course
         for j, course in enumerate(day):
-
-            print(d[i], hours[j], course)
 
             e = Event()
 
@@ -79,8 +79,6 @@ def matrix_to_ics(matrix_dict, group, begin, end):
                 e.end = e.begin.replace(hours=+1)
 
                 c.events.append(e)
-
-                print(e)
 
         # new day
         begin = begin.replace(days=+1)
@@ -106,11 +104,9 @@ if __name__ == '__main__':
         blocks = xml_to_blocks(xml)
         matrix_dict = blocks_to_matrix_dict(blocks)
         begin_date, end_date = ics_dates(xml)
-        #print(begin_date, end_date)
-        #print(matrix_dict.keys())
+
         # for each group
-        # for key in matrix_dict.keys():
-        group = matrix_dict.keys()[0]
-        print(group)
-        matrix_to_ics(matrix_dict, group, begin_date, end_date)
-        print("\n\n\n")
+        for group in matrix_dict.keys():
+
+            print(pdf, group)
+            matrix_to_ics(matrix_dict, group, begin_date, end_date)
