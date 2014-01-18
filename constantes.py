@@ -38,6 +38,14 @@ HOURS = [
  '17:00',
  ]
 
+DAYS = {
+ 0: 'Lundi',
+ 1: 'Mardi',
+ 2: 'Mercredi',
+ 3: 'Jeudi',
+ 4: 'Vendredi',
+ }
+
 MONTHS = {
  'janvier'  : '01',
  'février'  : '02',

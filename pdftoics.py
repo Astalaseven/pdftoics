@@ -3,6 +3,7 @@
 
 import re
 from operator import attrgetter
+from constantes import DAYS
 from BeautifulSoup import BeautifulSoup
 
 
@@ -94,6 +95,7 @@ def blocks_to_matrix(blocks):
 
 
 def blocks_to_matrix_dict(blocks):
+
     def palambda(x):
         x.content = striphtml(x.content).strip()
         return x
@@ -120,11 +122,10 @@ def pp_group(matrix_dict, group):
         raise ValueError('Not in matrix_dict, sorry')
 
     matrix = matrix_dict[group]
-    d = {0: 'Lundi', 1: 'Mardi', 2: 'Mercredi', 3: 'Jeudi', 4: 'Vendredi'}
 
     for day, col in enumerate(matrix):
 
-        print '=== {} ==='.format(d[day])
+        print '=== {} ==='.format(DAYS[day])
 
         for course in col:
             
