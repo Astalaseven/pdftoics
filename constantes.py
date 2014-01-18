@@ -95,6 +95,6 @@ PROFS = {
  'PBT': 'Pierre Bettens',
  'PMA': 'Pantelis Matsos',
  'RPL': 'René-Philippe Legrand',
- 'SRV': 'Fréd\éric Servais',
+ 'SRV': 'Frédéric Servais',
  'YPR': 'Yves Pierseaux',
  } 
