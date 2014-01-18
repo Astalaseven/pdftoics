@@ -5,7 +5,9 @@ import os
 import arrow
 from ics import Calendar, Event
 from pdftoics import xml_to_blocks, blocks_to_matrix_dict
+from constantes import HOURS, MONTHS, PROFS
 from scraperwiki import pdftoxml
+
 
 def list_pdf():
     '''Lists all pdfs in subdirectory'''
@@ -55,20 +57,12 @@ def matrix_to_ics(matrix_dict, group, begin, end, directory):
 
     c = Calendar()
 
-    #print(c.events)
-
-    hours = ["08:15", "09:15", "10:30", "11:30", "12:30", "13:45", "14:45", "16:00", "17:00"]
-
-    d = {0: 'Lundi', 1: 'Mardi', 2: 'Mercredi', 3: 'Jeudi', 4: 'Vendredi'}
-
     # begin = arrow.get("{} {}".format(begin, hours[0]), 'DD-MM-YYYY HH:mm')
-    months = {"janvier":'01', "février":'02', "mars":'03', "avril":'04', "mai":'05', "juin":'06', 
-    "juillet":'07', "aout":'08', "septembre":'09', "octobre":'10', "novembre":'11', "décembre":'12'}
 
     day, month, year = begin.split(" ")
-    begin = "{} {} {}".format(day, months[month], year)
+    begin = "{} {} {}".format(day, MONTHS[month], year)
 
-    begin = arrow.get("{} {}".format(begin, hours[0]), 'DD MM YYYY HH:mm')
+    begin = arrow.get("{} {}".format(begin, HOURS[0]), 'DD MM YYYY HH:mm')
 
 
     # for each day
@@ -83,8 +77,8 @@ def matrix_to_ics(matrix_dict, group, begin, end, directory):
                 e.name = course
 
                 # get begin hour
-                hour = int(hours[j].split(':')[0])
-                minute = int(hours[j].split(':')[1])
+                hour = int(HOURS[j].split(':')[0])
+                minute = int(HOURS[j].split(':')[1])
 
                 # set event begin/end date
                 e.begin = begin.replace(hour=hour, minute=minute)
