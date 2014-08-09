@@ -15,11 +15,9 @@ def get_profs():
     profs = {}
 
     for line in soup:
-
         line = str(line)
 
         if "profs" in line:
-
             abbr = line.split("(")[1].split(")")[0]
             prof = line.split(">")[2].split("<")[0]
 
@@ -60,6 +58,19 @@ MONTHS = {
  'novembre' : '11',
  'décembre' : '12',
  }
+
+HOLIDAYS = {
+    'Fête de la Communauté française': ['27/09/2014'],
+    'Congé de Toussaint': ['27/10/2014', '28/10/2014', '29/10/2014', '30/10/2014', '31/10/2014'],
+    'Congé de l’Armistice': ['11/11/2014'],
+    'Vacances d’hiver': ['22/12/2014', '23/12/2014', '24/12/2014', '25/12/2014', '26/12/2014',
+    '29/12/2014', '30/12/2014', '31/12/2014', '01/01/2015', '02/01/2015'],
+    #'Congé de Carnaval': 
+    'Vacances de printemps': ['06/04/2015', '07/04/2015', '08/04/2015', '09/04/2015', '10/04/2015',
+    '13/04/2015', '14/04/2015', '15/04/2015', '16/04/2015', '17/04/2015'],
+    'Fête du Travail': ['01/05/2015'],
+    'Congé de l’Ascension': ['25/06/2015'],
+}
 
 PROFS = {
  'ADT': 'Alain Detaille',

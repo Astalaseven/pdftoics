@@ -27,7 +27,7 @@ def get_timetable(s):
     return soup, timetable
 
 
-def clean_url(url):
+def clean_url(timetable):
 
     url = ""
 
