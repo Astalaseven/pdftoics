@@ -73,7 +73,7 @@ def matrix_to_ics(matrix_dict, group, begin, end, directory):
     end = "{} {} {}".format(day if int(day) > 9 else '0%s' % (day), MONTHS[month], year)
 
     begin = arrow.get("{} {}".format(begin, HOURS[0]), 'DD MM YYYY HH:mm')
-    end = arrow.get("{} {}".format(end, HOURS[0]), 'DD MM YYYY HH:mm')
+    end = arrow.get("{} {}".format(end, HOURS[-1]), 'DD MM YYYY HH:mm')
 
     # for each day of the week
     for i, day in enumerate(matrix_dict[group]):
@@ -168,7 +168,6 @@ def fix_timezone():
 if __name__ == '__main__':
 
     pdfs = list_pdf()
-    #print(pdfs)
     directories = pdfs.keys()
 
     print("\nAll PDFs : " + str(pdfs) + "\n")
